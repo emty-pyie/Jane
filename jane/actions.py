@@ -10,6 +10,8 @@ import webbrowser
 from dataclasses import dataclass
 from typing import Callable
 
+import google.generativeai as genai
+
 from jane.commands import ParsedCommand
 
 
