@@ -1,6 +1,6 @@
 # JANE Desktop Assistant
 
-JANE is a Jarvis-like desktop assistant built with **Python 3.11 + Kivy**.
+JANE is a desktop assistant built with **Python 3.11 + Kivy**.
 It supports:
 
 - Voice input (speech-to-text)
