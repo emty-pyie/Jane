@@ -10,6 +10,7 @@ JANE is a **desktop-first**, production-style AI assistant built with **Python +
 
 - Premium control-center style desktop UI
 - Voice input (speech-to-text) with wake word: **Hey Jane**
+- Voice input (speech-to-text)
 - Text-to-speech responses
 - Command parsing and smart intent routing
 - High-risk command queue with explicit grant/deny gate
@@ -20,6 +21,7 @@ JANE is a **desktop-first**, production-style AI assistant built with **Python +
 - Notes persistence to local file (`jane_notes.txt`)
 - Console export (`jane_console_log.txt`)
 - Optional Gemini chat integration through `GEMINI_API_KEY` (also accepts `GEMENI_API_KEY` / `GOOGLE_API_KEY`)
+- Optional Gemini chat integration through `GEMINI_API_KEY`
 
 ## Security
 
@@ -41,6 +43,9 @@ python main.py
 ```
 
 ## Run (Linux/macOS)
+```
+
+## Run
 
 ```bash
 python3 -m venv .venv
