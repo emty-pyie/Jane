@@ -67,6 +67,18 @@ def parse_command(text: str) -> ParsedCommand:
     open_match = re.match(r"open\s+(.+)", normalized)
     if open_match:
         return ParsedCommand(raw=text, action="open_app_or_site", params={"target": open_match.group(1).strip()})
+
+    return ParsedCommand(raw=text, action="chat", params={"prompt": text}, high_risk=False)
+
+
+def extract_wake_word_command(transcript: str, wake_word: str = "hey jane") -> str | None:
+    raw = transcript.strip()
+    lowered = raw.lower()
+    normalized_wake = wake_word.strip().lower()
+    if not lowered.startswith(normalized_wake):
+        return None
+    command = raw[len(normalized_wake) :].lstrip(" ,.!?:;-\t")
+    return command.strip()
         return ParsedCommand(
             raw=text,
             action="shutdown_system",

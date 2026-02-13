@@ -1,0 +1,235 @@
+#:import dp kivy.metrics.dp
+
+<AssistantRoot>:
+    orientation: 'vertical'
+    padding: dp(14)
+    spacing: dp(10)
+    canvas.before:
+        Color:
+            rgba: 0.03, 0.04, 0.08, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        size_hint_y: None
+        height: dp(88)
+        padding: dp(14)
+        canvas.before:
+            Color:
+                rgba: 0.09, 0.13, 0.22, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [16, 16, 16, 16]
+
+        BoxLayout:
+            orientation: 'vertical'
+            Label:
+                text: root.title_text
+                color: 0.34, 0.90, 1, 1
+                font_size: '30sp'
+                bold: True
+                halign: 'left'
+                text_size: self.size
+            Label:
+                text: root.subtitle_text
+                color: 0.78, 0.84, 0.97, 1
+                font_size: '13sp'
+                halign: 'left'
+                text_size: self.size
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_x: None
+            width: dp(360)
+            Label:
+                text: root.status_text
+                color: 0.95, 0.98, 1, 1
+                bold: True
+                halign: 'right'
+                text_size: self.size
+            Label:
+                text: root.wake_word_text
+                color: 0.69, 0.83, 1, 1
+                halign: 'right'
+                text_size: self.size
+
+    BoxLayout:
+        spacing: dp(10)
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(8)
+
+            BoxLayout:
+                size_hint_y: None
+                height: dp(50)
+                spacing: dp(8)
+                TextInput:
+                    id: user_input
+                    multiline: False
+                    hint_text: 'Type a command...'
+                    background_color: 0.10, 0.13, 0.20, 1
+                    foreground_color: 0.94, 0.98, 1, 1
+                    cursor_color: 0.33, 0.93, 1, 1
+                    padding: dp(12), dp(14)
+                    on_text_validate: root.submit_text_command()
+                Button:
+                    text: 'Execute'
+                    size_hint_x: None
+                    width: dp(120)
+                    background_normal: ''
+                    background_color: 0.26, 0.87, 1, 1
+                    color: 0.03, 0.08, 0.13, 1
+                    bold: True
+                    on_release: root.submit_text_command()
+
+            GridLayout:
+                cols: 4
+                size_hint_y: None
+                height: dp(40)
+                spacing: dp(8)
+                Button:
+                    text: 'What Time'
+                    background_normal: ''
+                    background_color: 0.18, 0.65, 1, 1
+                    on_release: root.run_quick('what time is it')
+                Button:
+                    text: 'Open WhatsApp'
+                    background_normal: ''
+                    background_color: 0.27, 0.77, 0.62, 1
+                    on_release: root.run_quick('open chrome and open whatsapp')
+                Button:
+                    text: 'Open Calculator'
+                    background_normal: ''
+                    background_color: 0.60, 0.67, 1, 1
+                    on_release: root.run_quick('open calculator')
+                Button:
+                    text: 'Date'
+                    background_normal: ''
+                    background_color: 0.48, 0.62, 0.95, 1
+                    on_release: root.run_quick('today date')
+
+            TextInput:
+                id: log_view
+                text: root.log_text
+                readonly: True
+                background_color: 0.06, 0.08, 0.14, 1
+                foreground_color: 0.89, 0.94, 1, 1
+
+            BoxLayout:
+                size_hint_y: None
+                height: dp(38)
+                spacing: dp(8)
+                Button:
+                    text: 'Export Logs'
+                    background_normal: ''
+                    background_color: 0.83, 0.74, 0.34, 1
+                    color: 0.14, 0.10, 0.02, 1
+                    on_release: root.export_logs()
+                Button:
+                    text: 'Clear Console'
+                    background_normal: ''
+                    background_color: 0.94, 0.45, 0.50, 1
+                    color: 0.14, 0.03, 0.05, 1
+                    on_release: root.clear_logs()
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_x: None
+            width: dp(310)
+            spacing: dp(8)
+
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_y: None
+                height: dp(172)
+                padding: dp(12)
+                spacing: dp(8)
+                canvas.before:
+                    Color:
+                        rgba: 0.09, 0.13, 0.21, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [16, 16, 16, 16]
+                Label:
+                    text: 'Core Controls'
+                    color: 0.65, 0.84, 1, 1
+                    bold: True
+                Button:
+                    text: '🎤 Voice Listen'
+                    background_normal: ''
+                    background_color: 0.35, 0.86, 0.72, 1
+                    color: 0.03, 0.10, 0.08, 1
+                    on_release: root.listen_voice()
+                Button:
+                    text: '📷 Vision Capture'
+                    background_normal: ''
+                    background_color: 0.57, 0.75, 1, 1
+                    color: 0.03, 0.07, 0.12, 1
+                    on_release: root.capture_vision()
+                Label:
+                    text: 'Queued High-Risk: ' + str(root.pending_count)
+                    color: 0.95, 0.83, 0.50, 1
+
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_y: None
+                height: dp(164)
+                padding: dp(12)
+                spacing: dp(8)
+                canvas.before:
+                    Color:
+                        rgba: 0.16, 0.12, 0.12, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [16, 16, 16, 16]
+                Label:
+                    text: 'High-Risk Gate'
+                    color: 1, 0.86, 0.75, 1
+                    bold: True
+                Button:
+                    text: '✅ Grant Approval'
+                    disabled: not root.has_pending_risk
+                    background_normal: ''
+                    background_color: 0.97, 0.80, 0.36, 1
+                    color: 0.16, 0.10, 0.02, 1
+                    on_release: root.approve_pending()
+                Button:
+                    text: '❌ Deny Approval'
+                    disabled: not root.has_pending_risk
+                    background_normal: ''
+                    background_color: 0.97, 0.48, 0.56, 1
+                    color: 0.17, 0.03, 0.06, 1
+                    on_release: root.deny_pending()
+
+            BoxLayout:
+                orientation: 'vertical'
+                padding: dp(12)
+                spacing: dp(6)
+                canvas.before:
+                    Color:
+                        rgba: 0.08, 0.10, 0.17, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [16, 16, 16, 16]
+                Label:
+                    text: 'Quick Notes'
+                    color: 0.72, 0.86, 1, 1
+                    bold: True
+                TextInput:
+                    id: note_input
+                    hint_text: 'Type note and click Save Note'
+                    multiline: True
+                    background_color: 0.1, 0.13, 0.2, 1
+                    foreground_color: 0.95, 0.98, 1, 1
+                Button:
+                    text: 'Save Note'
+                    background_normal: ''
+                    background_color: 0.40, 0.78, 1, 1
+                    color: 0.03, 0.08, 0.12, 1
+                    on_release: root.save_note_from_ui()

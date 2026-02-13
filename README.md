@@ -9,6 +9,7 @@ JANE is a **desktop-first**, production-style AI assistant built with **Python +
 ## Professional Feature Set
 
 - Premium control-center style desktop UI
+- Voice input (speech-to-text) with wake word: **Hey Jane**
 - Voice input (speech-to-text)
 - Text-to-speech responses
 - Command parsing and smart intent routing
@@ -19,6 +20,7 @@ JANE is a **desktop-first**, production-style AI assistant built with **Python +
 - Computer vision test capture
 - Notes persistence to local file (`jane_notes.txt`)
 - Console export (`jane_console_log.txt`)
+- Optional Gemini chat integration through `GEMINI_API_KEY` (also accepts `GEMENI_API_KEY` / `GOOGLE_API_KEY`)
 - Optional Gemini chat integration through `GEMINI_API_KEY`
 
 ## Security
@@ -27,6 +29,20 @@ Never hardcode credentials in code.
 
 ```bash
 export GEMINI_API_KEY="your_key_here"
+# fallback names also supported: GEMENI_API_KEY or GOOGLE_API_KEY
+```
+
+## Run (Windows - recommended)
+
+```powershell
+py -3.11 -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip setuptools wheel
+pip install -r requirements.txt
+python main.py
+```
+
+## Run (Linux/macOS)
 ```
 
 ## Run
@@ -34,8 +50,22 @@ export GEMINI_API_KEY="your_key_here"
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
 python main.py
+```
+
+## Fix: `ModuleNotFoundError: No module named 'kivy'`
+
+If you see this error, it means dependencies were not installed in the active environment.
+
+1. Activate your project venv.
+2. Upgrade pip tools.
+3. Install requirements.
+4. If needed, install Kivy directly:
+
+```bash
+pip install kivy
 ```
 
 ## Admin / Privileged Actions
@@ -62,3 +92,10 @@ You still must explicitly approve high-risk actions from the popup before execut
 - `jane/actions.py` → action execution layer
 - `jane/speech.py` → STT/TTS
 - `jane/vision.py` → camera capture
+
+
+## Example Voice Usage
+
+- Say: `Hey Jane what time is it`
+- Say: `Hey Jane open calculator`
+- Without wake word, voice input is ignored for safety and noise filtering.
