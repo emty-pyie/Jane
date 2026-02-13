@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import importlib
+import importlib.util
 import os
 import platform
 import subprocess
@@ -28,6 +30,10 @@ class ActionExecutor:
         key = os.getenv("GEMINI_API_KEY")
         if not key:
             return None
+        if importlib.util.find_spec("google.generativeai") is None:
+            return None
+
+        genai = importlib.import_module("google.generativeai")
         try:
             genai.configure(api_key=key)
             return genai.GenerativeModel("gemini-1.5-flash")

@@ -1,74 +1,58 @@
-# JANE Desktop Assistant
+# JANE Web Assistant
 
-JANE is a desktop assistant built with **Python 3.11 + Kivy**.
-It supports:
-
-- Voice input (speech-to-text)
-- Text-to-speech responses
-- Command NLP parsing
-- High-risk command approval workflow
-- Basic computer-vision capture utility
-- App/web opening automation
+A sleek Jarvis-like assistant named **JANE**, accessible from a browser-based control panel.
 
 **Name:** JANE  
-**Deployed By:** Visrodeck Technology
+**Deployed By:** Visrodeck Technology  
+**Track:** Stable web-enabled build
 
-## Security Notice
+## What’s New (Web Access)
 
-For API keys (for example Gemini), **do not hardcode secrets in source code**.
-Set them using environment variables:
+- Browser dashboard UI/UX (glassmorphism + responsive layout)
+- Voice command capture in browser (Web Speech API)
+- Built-in Python web server backend (no FastAPI install required)
+- High-risk command queue with **explicit per-command grant/deny**
+- Log viewer + pending queue panel
+- Optional Gemini chat integration via environment variable
+
+## Security Note
+
+Never hardcode API secrets.
 
 ```bash
 export GEMINI_API_KEY="your_key_here"
 ```
 
-JANE reads `GEMINI_API_KEY` at runtime.
-
-## Quick Start
+## Run
 
 ```bash
-python3.11 -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 python main.py
 ```
 
-## Features
+Then open:
 
-### Voice + NLP
-- Click **🎤 Listen** to capture a voice command.
-- Type commands manually in the input bar.
+- `http://localhost:8000`
 
-### High-Risk Command Grant
-Commands that can change system state are queued for explicit approval every time:
-- Shutdown/restart
-- Arbitrary terminal command execution
-- Theme changes / settings edits (mapped as high-risk action)
+## Example Commands
 
-Use:
-- **✅ Grant Selected** to approve
-- **❌ Deny Selected** to reject
+- `open chrome and open whatsapp`
+- `open settings and change theme`
+- `open terminal and download this library requests`
+- `shut down the system`
 
-### Example Commands
-- "open chrome and open whatsapp"
-- "open settings and change theme"
-- "open terminal and download this library requests"
-- "shut down the system"
+High-risk actions are never executed immediately. They are queued and require clicking:
 
-### Computer Vision
-Use **📷 Capture Vision Frame** to test webcam integration.
+- ✅ Grant High Risk
+- ❌ Deny High Risk
 
-## Project Structure
+## Architecture
 
-- `main.py` - app entry point
-- `jane/app.py` - Kivy UI and orchestration
-- `jane/commands.py` - command intent parsing
-- `jane/actions.py` - action execution layer
-- `jane/speech.py` - STT/TTS abstraction
-- `jane/vision.py` - OpenCV helper
-
-## Notes
-- Some actions are platform dependent.
-- On Linux, open-settings/theme change may vary by desktop environment.
-- Shutdown command includes a countdown + spoken warning:
-  **"System Black Out"**.
+- `jane/commands.py` → NLP intent parsing
+- `jane/actions.py` → cross-platform action execution
+- `jane_web/server.py` → built-in Python HTTP backend + state/queue
+- `jane_web/templates/index.html` → dashboard markup
+- `jane_web/static/style.css` → modern UI styling
+- `jane_web/static/app.js` → frontend logic + API calls
