@@ -1,23 +1,29 @@
-# JANE Web Assistant
+# JANE Desktop Assistant
 
-A sleek Jarvis-like assistant named **JANE**, accessible from a browser-based control panel.
+JANE is a **desktop-first**, production-style AI assistant built with **Python + Kivy**.
 
 **Name:** JANE  
 **Deployed By:** Visrodeck Technology  
-**Track:** Stable web-enabled build
+**Track:** Stable desktop software
 
-## What’s New (Web Access)
+## Professional Feature Set
 
-- Browser dashboard UI/UX (glassmorphism + responsive layout)
-- Voice command capture in browser (Web Speech API)
-- Built-in Python web server backend (no FastAPI install required)
-- High-risk command queue with **explicit per-command grant/deny**
-- Log viewer + pending queue panel
-- Optional Gemini chat integration via environment variable
+- Premium control-center style desktop UI
+- Voice input (speech-to-text)
+- Text-to-speech responses
+- Command parsing and smart intent routing
+- High-risk command queue with explicit grant/deny gate
+- Security popup appears for dangerous commands (approve once / deny)
+- Admin-elevation compatible execution path for privileged tasks
+- Quick actions panel (time, calculator, WhatsApp, note capture)
+- Computer vision test capture
+- Notes persistence to local file (`jane_notes.txt`)
+- Console export (`jane_console_log.txt`)
+- Optional Gemini chat integration through `GEMINI_API_KEY`
 
-## Security Note
+## Security
 
-Never hardcode API secrets.
+Never hardcode credentials in code.
 
 ```bash
 export GEMINI_API_KEY="your_key_here"
@@ -32,9 +38,10 @@ pip install -r requirements.txt
 python main.py
 ```
 
-Then open:
+## Admin / Privileged Actions
 
-- `http://localhost:8000`
+JANE can request elevated rights for privileged tasks (installs, shutdown, certain system actions).
+You still must explicitly approve high-risk actions from the popup before execution.
 
 ## Example Commands
 
@@ -42,17 +49,16 @@ Then open:
 - `open settings and change theme`
 - `open terminal and download this library requests`
 - `shut down the system`
+- `what time is it`
+- `today date`
+- `open calculator`
+- `note: buy milk tomorrow`
 
-High-risk actions are never executed immediately. They are queued and require clicking:
+## Structure
 
-- ✅ Grant High Risk
-- ❌ Deny High Risk
-
-## Architecture
-
-- `jane/commands.py` → NLP intent parsing
-- `jane/actions.py` → cross-platform action execution
-- `jane_web/server.py` → built-in Python HTTP backend + state/queue
-- `jane_web/templates/index.html` → dashboard markup
-- `jane_web/static/style.css` → modern UI styling
-- `jane_web/static/app.js` → frontend logic + API calls
+- `main.py` → app entrypoint
+- `jane/app.py` → professional UI + orchestration
+- `jane/commands.py` → intent parsing
+- `jane/actions.py` → action execution layer
+- `jane/speech.py` → STT/TTS
+- `jane/vision.py` → camera capture

@@ -28,6 +28,7 @@ def parse_command(text: str) -> ParsedCommand:
         )
 
     if normalized.startswith("open ") and "settings" in normalized and "theme" in normalized:
+        return ParsedCommand(raw=text, action="change_theme", params={}, high_risk=True)
         return ParsedCommand(
             raw=text,
             action="change_theme",
@@ -45,6 +46,27 @@ def parse_command(text: str) -> ParsedCommand:
         )
 
     if "shut down" in normalized or "shutdown" in normalized:
+        return ParsedCommand(raw=text, action="shutdown_system", params={"countdown": 10}, high_risk=True)
+
+    if "what time" in normalized or "current time" in normalized:
+        return ParsedCommand(raw=text, action="tell_time")
+
+    if "what date" in normalized or "today date" in normalized:
+        return ParsedCommand(raw=text, action="tell_date")
+
+    note_match = re.search(r"note\s*[:\-]?\s*(.+)$", text.strip(), re.IGNORECASE)
+    if note_match:
+        return ParsedCommand(raw=text, action="save_note", params={"note": note_match.group(1).strip()})
+
+    if "open calculator" in normalized:
+        return ParsedCommand(raw=text, action="open_calculator")
+
+    if "open notepad" in normalized or "open editor" in normalized:
+        return ParsedCommand(raw=text, action="open_notepad")
+
+    open_match = re.match(r"open\s+(.+)", normalized)
+    if open_match:
+        return ParsedCommand(raw=text, action="open_app_or_site", params={"target": open_match.group(1).strip()})
         return ParsedCommand(
             raw=text,
             action="shutdown_system",

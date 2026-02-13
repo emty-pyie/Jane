@@ -1,3 +1,8 @@
+from jane.app import JaneApp
+
+
+if __name__ == "__main__":
+    JaneApp().run()
 from jane_web.server import run_server
 
 
