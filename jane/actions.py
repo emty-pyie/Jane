@@ -62,6 +62,19 @@ class ActionExecutor:
         try:
             genai.configure(api_key=key)
             self._gemini_key_loaded = key
+        self.gemini_model = self._init_gemini_model()
+        self.notes_file = Path("jane_notes.txt")
+
+    def _init_gemini_model(self):
+        key = os.getenv("GEMINI_API_KEY")
+        if not key:
+            return None
+        if importlib.util.find_spec("google.generativeai") is None:
+            return None
+
+        genai = importlib.import_module("google.generativeai")
+        try:
+            genai.configure(api_key=key)
             return genai.GenerativeModel("gemini-1.5-flash")
         except Exception:
             return None
@@ -170,6 +183,10 @@ class ActionExecutor:
         stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         with self.notes_file.open("a", encoding="utf-8") as fh:
             fh.write(f"[{stamp}] {note}\n")
+        self.notes_file.write_text(
+            (self.notes_file.read_text() if self.notes_file.exists() else "") + f"[{stamp}] {note}\n",
+            encoding="utf-8",
+        )
         return ActionResult(True, "Note saved to jane_notes.txt")
 
     def _open_system_app(self, candidates: list[str]) -> ActionResult:
@@ -199,6 +216,8 @@ class ActionExecutor:
                 True,
                 "Gemini is not configured. Set GEMINI_API_KEY (or GEMENI_API_KEY / GOOGLE_API_KEY) and ensure google-generativeai is installed.",
             )
+        if self.gemini_model is None:
+            return ActionResult(True, "Gemini is not configured. Set GEMINI_API_KEY to enable AI chat.")
         try:
             response = self.gemini_model.generate_content(prompt)
             text = getattr(response, "text", None) or "I could not generate a response."

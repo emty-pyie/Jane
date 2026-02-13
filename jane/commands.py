@@ -29,6 +29,12 @@ def parse_command(text: str) -> ParsedCommand:
 
     if normalized.startswith("open ") and "settings" in normalized and "theme" in normalized:
         return ParsedCommand(raw=text, action="change_theme", params={}, high_risk=True)
+        return ParsedCommand(
+            raw=text,
+            action="change_theme",
+            params={},
+            high_risk=True,
+        )
 
     download_match = re.search(r"download\s+(?:this\s+library\s+)?([a-z0-9_\-.]+)", normalized)
     if "open terminal" in normalized and download_match:
@@ -73,3 +79,20 @@ def extract_wake_word_command(transcript: str, wake_word: str = "hey jane") -> s
         return None
     command = raw[len(normalized_wake) :].lstrip(" ,.!?:;-\t")
     return command.strip()
+        return ParsedCommand(
+            raw=text,
+            action="shutdown_system",
+            params={"countdown": 10},
+            high_risk=True,
+        )
+
+    open_match = re.match(r"open\s+(.+)", normalized)
+    if open_match:
+        return ParsedCommand(
+            raw=text,
+            action="open_app_or_site",
+            params={"target": open_match.group(1).strip()},
+            high_risk=False,
+        )
+
+    return ParsedCommand(raw=text, action="chat", params={"prompt": text}, high_risk=False)
