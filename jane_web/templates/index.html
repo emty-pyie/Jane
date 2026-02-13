@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JANE | Web Assistant</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+  <main class="shell">
+    <header class="topbar glass">
+      <div>
+        <h1>JANE</h1>
+        <p>Deployed By: Visrodeck Technology</p>
+      </div>
+      <div class="badge">Stable Web Control Panel</div>
+    </header>
+
+    <section class="panel glass">
+      <div class="row">
+        <input id="cmd" placeholder="Try: open chrome and open whatsapp" />
+        <button id="send">Send</button>
+      </div>
+      <div class="row">
+        <button id="voice">🎙 Voice Input</button>
+        <button id="approve" class="warn">✅ Grant High Risk</button>
+        <button id="deny" class="danger">❌ Deny High Risk</button>
+      </div>
+      <p id="status">Ready.</p>
+    </section>
+
+    <section class="logs glass">
+      <h3>System Logs</h3>
+      <pre id="logbox"></pre>
+    </section>
+
+    <section class="pending glass">
+      <h3>Pending High-Risk Queue</h3>
+      <ul id="queue"></ul>
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>
