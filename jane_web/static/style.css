@@ -1,0 +1,49 @@
+:root {
+  --bg: #0b1020;
+  --text: #e8ecff;
+  --muted: #a9b0d0;
+  --accent: #52d3ff;
+  --panel: rgba(19, 24, 44, 0.68);
+  --border: rgba(255, 255, 255, 0.14);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, Segoe UI, system-ui, sans-serif;
+  color: var(--text);
+  background: radial-gradient(circle at top right, #172349, var(--bg));
+  min-height: 100vh;
+}
+.shell { max-width: 980px; margin: 28px auto; padding: 0 18px 24px; position: relative; z-index: 5; }
+.glass {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+  border-radius: 16px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.34);
+}
+.topbar { display:flex; justify-content:space-between; align-items:center; padding: 20px; margin-bottom: 16px; }
+h1 { margin: 0; letter-spacing: 1px; font-size: 36px; color: var(--accent); }
+p { margin: 4px 0 0; color: var(--muted); }
+.badge { background: rgba(82,211,255,.18); border:1px solid rgba(82,211,255,.35); padding: 8px 12px; border-radius:999px; font-size: 13px; }
+.panel,.logs,.pending { padding: 16px; margin-bottom: 16px; }
+.row { display:flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+input {
+  flex:1; min-width: 260px; padding: 12px; border-radius: 10px; border:1px solid var(--border);
+  background:#0e1430; color: var(--text);
+}
+button {
+  border: 0; border-radius: 10px; padding: 11px 14px; color:#041018;
+  background: linear-gradient(135deg, #67e4ff, #42e0b8); font-weight: 700; cursor: pointer;
+}
+button.warn { background: linear-gradient(135deg, #f9ea7f, #fcb045); }
+button.danger { background: linear-gradient(135deg, #ff8a8a, #ff5178); }
+#status { color: var(--muted); margin: 4px 0 0; }
+pre {
+  margin: 0; max-height: 300px; overflow: auto; white-space: pre-wrap;
+  background: #080d21; border-radius: 12px; padding: 12px; border:1px solid var(--border);
+}
+ul { margin: 0; padding-left: 18px; color: #f5dd9c; }
+.bg-orb { position: fixed; border-radius: 50%; filter: blur(35px); opacity: .45; z-index: 1; }
+.orb-a { width: 220px; height: 220px; background: #40c9ff; top: -80px; left: -70px; }
+.orb-b { width: 260px; height: 260px; background: #8a5bff; bottom: -100px; right: -80px; }

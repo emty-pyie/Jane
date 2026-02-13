@@ -13,6 +13,8 @@ from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
+from kivy.properties import BooleanProperty, StringProperty
+from kivy.uix.boxlayout import BoxLayout
 
 from jane.actions import ActionExecutor
 from jane.commands import ParsedCommand, parse_command
@@ -29,6 +31,13 @@ KV = '''
     canvas.before:
         Color:
             rgba: 0.03, 0.04, 0.09, 1
+<AssistantRoot>:
+    orientation: 'vertical'
+    spacing: dp(10)
+    padding: dp(12)
+    canvas.before:
+        Color:
+            rgba: 0.07, 0.08, 0.1, 1
         Rectangle:
             pos: self.pos
             size: self.size
@@ -253,6 +262,66 @@ KV = '''
                     background_color: 0.40, 0.78, 1, 1
                     color: 0.03, 0.08, 0.12, 1
                     on_release: root.save_note_from_ui()
+    Label:
+        text: root.title_text
+        font_size: '26sp'
+        bold: True
+        color: 0.3, 0.85, 1, 1
+        size_hint_y: None
+        height: dp(44)
+
+    Label:
+        text: root.subtitle_text
+        color: 0.75, 0.78, 0.82, 1
+        size_hint_y: None
+        height: dp(28)
+
+    TextInput:
+        id: log_view
+        text: root.log_text
+        readonly: True
+        background_color: 0.12, 0.13, 0.16, 1
+        foreground_color: 0.9, 0.92, 0.97, 1
+
+    BoxLayout:
+        size_hint_y: None
+        height: dp(46)
+        spacing: dp(8)
+        TextInput:
+            id: user_input
+            multiline: False
+            hint_text: 'Type a command for JANE...'
+            background_color: 0.14, 0.15, 0.2, 1
+            foreground_color: 1, 1, 1, 1
+            on_text_validate: root.submit_text_command()
+        Button:
+            text: 'Send'
+            on_release: root.submit_text_command()
+
+    BoxLayout:
+        size_hint_y: None
+        height: dp(46)
+        spacing: dp(8)
+        Button:
+            text: '🎤 Listen'
+            on_release: root.listen_voice()
+        Button:
+            text: '📷 Capture Vision Frame'
+            on_release: root.capture_vision()
+
+    BoxLayout:
+        size_hint_y: None
+        height: dp(46)
+        spacing: dp(8)
+        opacity: 1 if root.has_pending_risk else 0.2
+        Button:
+            text: '✅ Grant Selected'
+            disabled: not root.has_pending_risk
+            on_release: root.approve_pending()
+        Button:
+            text: '❌ Deny Selected'
+            disabled: not root.has_pending_risk
+            on_release: root.deny_pending()
 '''
 
 
@@ -263,6 +332,8 @@ class AssistantRoot(BoxLayout):
     log_text = StringProperty("[BOOT] JANE core is online.\n")
     has_pending_risk = BooleanProperty(False)
     pending_count = NumericProperty(0)
+    log_text = StringProperty("[BOOT] JANE is online.\n")
+    has_pending_risk = BooleanProperty(False)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -271,6 +342,7 @@ class AssistantRoot(BoxLayout):
         self.pending: deque[ParsedCommand] = deque()
         self.risk_popup: Popup | None = None
         self.safe_speak("Hello, I am JANE. Premium desktop interface initialized.")
+        self.safe_speak("Hello, I am JANE. How can I assist you today?")
 
     def append_log(self, line: str) -> None:
         self.log_text += line + "\n"
@@ -339,6 +411,8 @@ class AssistantRoot(BoxLayout):
             self._refresh_pending_flags()
             self.safe_speak(f"High-risk command queued for approval: {parsed.raw}")
             self.show_risk_popup(parsed)
+            self.has_pending_risk = True
+            self.safe_speak(f"High-risk command queued for approval: {parsed.raw}")
             return
 
         self.run_command(parsed)
@@ -359,6 +433,11 @@ class AssistantRoot(BoxLayout):
         self._refresh_pending_flags()
         self.append_log(f"[APPROVED] {command.raw}")
         self.dismiss_risk_popup()
+            self.has_pending_risk = False
+            return
+        command = self.pending.popleft()
+        self.has_pending_risk = bool(self.pending)
+        self.append_log(f"[APPROVED] {command.raw}")
         self.run_command(command)
 
     def deny_pending(self) -> None:
@@ -418,6 +497,12 @@ class AssistantRoot(BoxLayout):
             auto_dismiss=False,
         )
         self.risk_popup.open()
+
+            self.has_pending_risk = False
+            return
+        command = self.pending.popleft()
+        self.has_pending_risk = bool(self.pending)
+        self.safe_speak(f"Denied: {command.raw}")
 
     def capture_vision(self) -> None:
         def _capture():
