@@ -99,3 +99,21 @@ You still must explicitly approve high-risk actions from the popup before execut
 - Say: `Hey Jane what time is it`
 - Say: `Hey Jane open calculator`
 - Without wake word, voice input is ignored for safety and noise filtering.
+
+
+## Fix: `IndentationError: unexpected indent`
+
+If you see this on startup, one Python file is malformed (often from manual copy/paste).
+
+1. Re-copy a clean version of the project files (especially `jane/commands.py`).
+2. Run syntax check:
+
+```bash
+python -m py_compile main.py jane/*.py
+```
+
+3. Start again:
+
+```bash
+python main.py
+```
