@@ -122,7 +122,7 @@ class JaneRequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         route = urlparse(self.path).path
-        if route == "/":
+        if route in {"/", "/index.html"}:
             self._send_file(BASE_DIR / "templates" / "index.html", "text/html; charset=utf-8")
             return
         if route == "/api/state":
@@ -134,6 +134,12 @@ class JaneRequestHandler(BaseHTTPRequestHandler):
         if route == "/static/app.js":
             self._send_file(BASE_DIR / "static" / "app.js", "application/javascript; charset=utf-8")
             return
+
+        # SPA-friendly fallback for browser refreshes on non-API paths
+        if not route.startswith("/api/") and not route.startswith("/static/"):
+            self._send_file(BASE_DIR / "templates" / "index.html", "text/html; charset=utf-8")
+            return
+
         self.send_error(HTTPStatus.NOT_FOUND, "Not Found")
 
     def do_POST(self):
